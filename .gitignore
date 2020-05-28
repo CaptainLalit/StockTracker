@@ -1,2 +1,5 @@
 .vscode/
 .idea/
+postgres
+stock_manager
+stock_manager-journal
