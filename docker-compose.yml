@@ -3,23 +3,33 @@ version: "3"
 services:
   db:
     image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=stock_manager
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PORT=5432
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - /var/lalit-docker:/var/lib/postgresql/data
+    ports:
+      - 5431:5432
+    networks:
+      - backend
+
+  web:
+    build: .
+    restart: always
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
     environment:
       - POSTGRES_HOST=db
       - POSTGRES_DB=stock_manager
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_PORT=5432
-    volumes:
-      - /usr/local/pgsql/data:/usr/local/pgsql/data
-    networks:
-      - backend
-
-  web:
-    build: .
-    volumes:
-      - .:/code
-    ports:
-      - 8000:8000
     command: >
       bash -c "python manage.py migrate
       && python manage.py runserver 0.0.0.0:8000"
